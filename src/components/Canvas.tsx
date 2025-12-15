@@ -1132,7 +1132,7 @@ function Canvas({ spriteId }: CanvasProps) {
     };
 
 
-  const handleWheel = (e: React.WheelEvent) => {
+  const handleWheel = useCallback((e: WheelEvent) => {
     e.preventDefault();
     
     if (e.ctrlKey) {
@@ -1146,10 +1146,19 @@ function Canvas({ spriteId }: CanvasProps) {
       const newZoom = Math.max(1, Math.min(32, zoom + delta));
       setZoom(newZoom);
     }
-  };
+  }, [setZoom, zoom]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const wheelListener = (event: WheelEvent) => handleWheel(event);
+    el.addEventListener('wheel', wheelListener, { passive: false });
+    return () => el.removeEventListener('wheel', wheelListener);
+  }, [handleWheel]);
 
   return (
-    <div className="canvas-container" ref={containerRef} onWheel={handleWheel}>
+    <div className="canvas-container" ref={containerRef}>
       <div className="canvas-wrapper" style={{
         transform: `translate(${panOffset.x}px, ${panOffset.y}px)`,
         cursor: selectedTool === 'move' ? 'grab' : isPanning ? 'grabbing' : 'crosshair',
