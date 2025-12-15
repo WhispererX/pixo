@@ -1,0 +1,272 @@
+.conflict-warning {
+  margin-top: 8px;
+  color: #ff6b6b;
+  font-weight: 600;
+}
+.shortcuts-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.keyboard-shortcuts-dialog {
+  background: #2d2d30;
+  border: 1px solid #3e3e42;
+  border-radius: 8px;
+  width: 700px;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s;
+  overflow: hidden;
+}
+
+.keyboard-shortcuts-dialog .dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #3e3e42;
+}
+
+.keyboard-shortcuts-dialog .dialog-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.keyboard-shortcuts-dialog .close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #cccccc;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.keyboard-shortcuts-dialog .close-button:hover {
+  color: #ffffff;
+}
+
+.keyboard-shortcuts-dialog .dialog-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 56px;
+}
+
+.shortcuts-search {
+  margin-bottom: 16px;
+}
+
+.shortcuts-search input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #3e3e42;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #1e1e1e;
+  color: #cccccc;
+}
+
+.shortcuts-search input:focus {
+  outline: none;
+  border-color: #8b7ec8;
+}
+
+.shortcuts-list {
+  max-height: 50vh;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.shortcuts-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.shortcuts-list::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.shortcuts-list::-webkit-scrollbar-thumb {
+  background: #3e3e42;
+  border-radius: 4px;
+}
+
+.shortcuts-list::-webkit-scrollbar-thumb:hover {
+  background: #4e4e52;
+}
+
+.shortcuts-category {
+  margin-bottom: 24px;
+}
+
+.shortcuts-category h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #3e3e42;
+}
+
+.shortcuts-category table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.shortcuts-category tr {
+  border-bottom: 1px solid #2d2d30;
+}
+
+.shortcuts-category tr:last-child {
+  border-bottom: none;
+}
+
+.shortcuts-category td {
+  padding: 8px 4px;
+}
+
+.shortcut-description {
+  font-size: 14px;
+  color: #cccccc;
+}
+
+.shortcut-keys {
+  text-align: right;
+  width: 200px;
+}
+
+.shortcut-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #1e1e1e;
+  border: 1px solid #3e3e42;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+  color: #cccccc;
+  min-width: 60px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.shortcut-badge:hover {
+  background: #3e3e42;
+  border-color: #8b7ec8;
+}
+
+.capturing-keys {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #4CAF50;
+  color: white;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+  min-width: 60px;
+  text-align: center;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.capture-hint {
+  padding: 12px;
+  background: #e3f2fd;
+  border-left: 3px solid #2196F3;
+  font-size: 13px;
+  color: #1976D2;
+  margin-top: 8px;
+.capturing-keys.conflict {
+  background: #3a1f1f;
+  color: #ff6b6b;
+}
+  position: sticky;
+  bottom: 0;
+  background: #1e1e1e;
+  padding: 10px 12px;
+  border-top: 1px solid #333;
+  font-size: 12px;
+  color: #bbb;
+}
+
+.keyboard-shortcuts-dialog .dialog-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-top: 1px solid #3e3e42;
+  gap: 12px;
+}
+
+.keyboard-shortcuts-dialog .reset-button {
+  background: #ff5722;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.keyboard-shortcuts-dialog .reset-button:hover {
+  background: #e64a19;
+}
+
+.keyboard-shortcuts-dialog .dialog-footer button:not(.reset-button) {
+  background: #8b7ec8;
+  color: white;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.keyboard-shortcuts-dialog .dialog-footer button:not(.reset-button):hover {
+  background: #005a9e;
+}

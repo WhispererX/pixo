@@ -1,0 +1,73 @@
+.tool-button {
+  position: relative;
+  width: 100%;
+  height: 36px;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  color: #cccccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.tool-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.tool-button.active {
+  background: #8b7ec8;
+  color: #ffffff;
+}
+
+.tool-button.grouped .group-indicator {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  font-size: 8px;
+  opacity: 0.7;
+}
+
+.tool-submenu {
+  background: #2d2d30;
+  border: 1px solid #3e3e42;
+  border-radius: 4px;
+  padding: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  min-width: 180px;
+}
+
+.submenu-tool {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: #cccccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+  font-size: 13px;
+}
+
+.submenu-tool:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.submenu-tool.active {
+  background: #8b7ec8;
+  color: #ffffff;
+}
+
+.submenu-label {
+  flex: 1;
+  text-align: left;
+}

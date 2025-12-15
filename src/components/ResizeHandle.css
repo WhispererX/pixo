@@ -1,0 +1,49 @@
+.resize-handle {
+  position: relative;
+  background: transparent;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.resize-handle.horizontal {
+  width: 4px;
+  cursor: col-resize;
+  transition: background-color 0.2s;
+}
+
+.resize-handle.vertical {
+  height: 4px;
+  cursor: row-resize;
+  transition: background-color 0.2s;
+  background-color: #333;
+}
+
+.resize-handle:hover,
+.resize-handle.dragging {
+  background: #8b7ec8;
+}
+
+.resize-handle-line {
+  position: absolute;
+  background: transparent;
+}
+
+.resize-handle.horizontal .resize-handle-line {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.resize-handle.vertical .resize-handle-line {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.resize-handle.dragging .resize-handle-line {
+  background: #8b7ec8;
+}

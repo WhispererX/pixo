@@ -1,0 +1,244 @@
+.colors-view {
+  background: #252526;
+  border-left: 2px solid #3e3e42;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.colors-view-header {
+  padding: 12px 15px;
+  border-bottom: 1px solid #1e1e1e;
+  background: #2d2d30;
+}
+
+.panel-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #cccccc;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  padding: 10px 15px;
+  overflow-y: auto;
+  border-bottom: 1px solid #1e1e1e;
+}
+
+.palette-color {
+  aspect-ratio: 1;
+  border: 1px solid #3e3e42;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.palette-color:hover {
+  border-color: #8b7ec8;
+  transform: scale(1.1);
+  box-shadow: 0 0 8px rgba(139, 126, 200, 0.3);
+}
+
+.colors-swatches-container {
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.color-picker-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.color-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.color-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.color-picker {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #3e3e42;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.color-picker:hover {
+  border-color: #8b7ec8;
+}
+
+.opacity-slider-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.opacity-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #3e3e42;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.opacity-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #8b7ec8;
+  cursor: pointer;
+  border: 1px solid #6d5fa8;
+}
+
+.opacity-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #8b7ec8;
+  cursor: pointer;
+  border: 1px solid #6d5fa8;
+}
+
+.opacity-value {
+  font-size: 11px;
+  color: #888888;
+  min-width: 35px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.swap-button {
+  background: none;
+  border: 1px solid #3e3e42;
+  border-radius: 3px;
+  color: #888888;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-size: 12px;
+  height: 24px;
+  width: 24px;
+  flex-shrink: 0;
+  margin-top: 1rem;
+}
+
+.add-palette-button {
+  padding: 8px 16px;
+  background: #8b7ec8;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(139, 126, 200, 0.2);
+  margin-inline: auto;
+}
+
+.add-palette-button:hover {
+  background: #9b8ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 126, 200, 0.3);
+}
+
+.add-palette-button:active {
+  transform: translateY(0);
+}
+.color-swatch-wrapper {
+  position: relative;
+  display: flex;
+}
+
+.color-swatch {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #3e3e42;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0;
+  background-size: cover;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.color-swatch:hover {
+  border-color: #8b7ec8;
+  box-shadow: 0 0 8px rgba(139, 126, 200, 0.4);
+  transform: scale(1.05);
+}
+
+.color-swatch:active {
+  transform: scale(0.98);
+}
+
+.color-picker-popup {
+  position: fixed;
+  z-index: 1000;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  transform: translateX(-50%);
+  margin-top: 8px;
+}
+
+.color-picker-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+/* Style react-color ChromePicker to match dark theme */
+.color-picker-popup :global(.chrome-picker) {
+  background: #252526 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8) !important;
+  padding: 10px !important;
+}
+
+.color-picker-popup :global(.chrome-picker input) {
+  background: #3e3e42 !important;
+  color: #cccccc !important;
+  border: 1px solid #3e3e42 !important;
+  border-radius: 2px !important;
+}
+
+.color-picker-popup :global(.chrome-picker label) {
+  color: #888888 !important;
+  font-size: 11px !important;
+}
