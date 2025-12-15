@@ -32,5 +32,41 @@
     "typescript": "^5.3.3",
     "vite": "^5.0.8",
     "vite-plugin-electron": "^0.28.1"
+  },
+  "build": {
+    "appId": "com.pixo.app",
+    "productName": "Pixo",
+    "icon": "icon.png",
+    "asar": true,
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "electron/**",
+      "package.json",
+      "icon.png"
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "fileAssociations": [
+      {
+        "ext": "pixo",
+        "name": "Pixo Project",
+        "role": "Editor",
+        "description": "Pixo project file"
+      },
+      {
+        "ext": "pix",
+        "name": "Pixo Project (legacy)",
+        "role": "Editor",
+        "description": "Pixo project file"
+      },
+      {
+        "ext": "png",
+        "name": "PNG Image",
+        "role": "Editor",
+        "description": "PNG image"
+      }
+    ]
   }
 }

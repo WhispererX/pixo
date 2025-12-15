@@ -8,13 +8,24 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let mainWindow: BrowserWindow | null = null;
 let pendingFilePath: string | null = null;
 
+const SUPPORTED_EXTENSIONS = ['.pixo', '.pix', '.png'];
+
+function extractFileArg(argv: string[]): string | undefined {
+  return argv.find((arg) => SUPPORTED_EXTENSIONS.includes(path.extname(arg).toLowerCase()));
+}
+
 function createWindow() {
+  const iconPath = app.isPackaged
+    ? path.join(process.resourcesPath, 'icon.png')
+    : path.join(__dirname, '../icon.png');
+
   mainWindow = new BrowserWindow({
     width: 1400,
     height: 900,
     minWidth: 800,
     minHeight: 600,
     backgroundColor: '#1e1e1e',
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -25,7 +36,6 @@ function createWindow() {
     autoHideMenuBar: true,
   });
 
-  // Load the app
   if (process.env.VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
     mainWindow.webContents.openDevTools();
@@ -37,7 +47,6 @@ function createWindow() {
     mainWindow = null;
   });
 
-  // If a file was pending, send it to the renderer
   if (pendingFilePath) {
     mainWindow.webContents.on('did-finish-load', () => {
       mainWindow?.webContents.send('open-file', pendingFilePath);
@@ -46,23 +55,32 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(createWindow);
+const gotLock = app.requestSingleInstanceLock();
 
-// Register .pixo file association on Windows
-if (process.platform === 'win32' && !process.mas) {
-  try {
-    // This will set Pixo as the default handler for .pixo files
-    app.setAsDefaultProtocolClient('pixo');
-    
-    // For command line launch with file argument
-    const args = process.argv.slice(1);
-    const pixoFilePath = args.find(arg => arg.endsWith('.pixo'));
-    if (pixoFilePath) {
-      pendingFilePath = pixoFilePath;
+if (!gotLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (_event, argv) => {
+    const args = process.platform === 'win32' ? argv.slice(1) : argv.slice(1);
+    const fileFromArgs = extractFileArg(args);
+    if (fileFromArgs) {
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.focus();
+        mainWindow.webContents.send('open-file', fileFromArgs);
+      } else {
+        pendingFilePath = fileFromArgs;
+      }
     }
-  } catch (error) {
-    console.error('Failed to register protocol:', error);
+  });
+
+  const startupArgs = process.platform === 'win32' ? process.argv.slice(1) : process.argv.slice(1);
+  const startupFile = extractFileArg(startupArgs);
+  if (startupFile) {
+    pendingFilePath = startupFile;
   }
+
+  app.whenReady().then(createWindow);
 }
 
 app.on('window-all-closed', () => {
@@ -77,7 +95,6 @@ app.on('activate', () => {
   }
 });
 
-// Handle open-file event for Windows/Linux
 app.on('open-file', (event, filePath) => {
   event.preventDefault();
   
@@ -156,7 +173,7 @@ ipcMain.handle('export-png', async (event, filePath: string, dataUrl: string) =>
   }
 });
 
-// Get recent files (stored in localStorage equivalent)
+// Get recent files
 const recentFilesPath = path.join(app.getPath('userData'), 'recent-files.json');
 
 ipcMain.handle('get-recent-files', async () => {
@@ -179,13 +196,10 @@ ipcMain.handle('add-recent-file', async (event, filePath: string) => {
       recentFiles = JSON.parse(data);
     }
     
-    // Remove if already exists
     recentFiles = recentFiles.filter(f => f !== filePath);
     
-    // Add to beginning
     recentFiles.unshift(filePath);
     
-    // Keep only last 10
     recentFiles = recentFiles.slice(0, 10);
     
     fs.writeFileSync(recentFilesPath, JSON.stringify(recentFiles), 'utf-8');
