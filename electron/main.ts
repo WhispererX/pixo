@@ -161,6 +161,17 @@ ipcMain.handle('read-file', async (event, filePath: string) => {
   }
 });
 
+// Read file binary (base64) for images like PNG
+ipcMain.handle('read-file-binary', async (event, filePath: string) => {
+  try {
+    const buffer = fs.readFileSync(filePath);
+    const base64 = buffer.toString('base64');
+    return { success: true, base64 };
+  } catch (error) {
+    return { success: false, error: (error as Error).message };
+  }
+});
+
 // Export as PNG
 ipcMain.handle('export-png', async (event, filePath: string, dataUrl: string) => {
   try {

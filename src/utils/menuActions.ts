@@ -100,6 +100,126 @@ export async function handleOpen() {
   }
 }
 
+export async function handleOpenPath(filePath: string) {
+  const { addSprite, addTab, setActiveTab } = useAppStore.getState();
+  try {
+    const api = await getElectronAPI();
+    const lower = filePath.toLowerCase();
+    if (lower.endsWith('.pix') || lower.endsWith('.pixo')) {
+      const fileResult = await api.readFile(filePath);
+      if (!fileResult.success || !fileResult.content) {
+        alert('Failed to open file');
+        return;
+      }
+      const data = JSON.parse(fileResult.content);
+      const spriteId = uuidv4();
+      const sprite: Sprite = {
+        ...data,
+        id: spriteId,
+        layers: data.layers.map((layer: any) => ({
+          ...layer,
+          pixels: new Map(Object.entries(layer.pixels)),
+        })),
+      };
+      addSprite(sprite);
+      const newTab: Tab = {
+        id: uuidv4(),
+        type: 'sprite',
+        title: sprite.name,
+        spriteId,
+        modified: false,
+        filePath,
+      };
+      addTab(newTab);
+      setActiveTab(newTab.id);
+      await api.addRecentFile(filePath);
+      return;
+    }
+
+    if (lower.endsWith('.png')) {
+      const bin = await api.readFileBinary(filePath);
+      if (!bin.success || !bin.base64) {
+        alert('Failed to read image');
+        return;
+      }
+      const dataUrl = `data:image/png;base64,${bin.base64}`;
+      await new Promise<void>((resolve, reject) => {
+        const img = new Image();
+        img.onload = async () => {
+          try {
+            const spriteId = uuidv4();
+            const defaultLayer: Layer = {
+              id: uuidv4(),
+              name: 'Layer 1',
+              visible: true,
+              opacity: 100,
+              pixels: new Map<string, string>(),
+              locked: false,
+            };
+            const { addSprite } = useAppStore.getState();
+            addSprite({
+              id: spriteId,
+              name: `Imported ${img.width}x${img.height}`,
+              width: img.width,
+              height: img.height,
+              backgroundColor: 'transparent',
+              layers: [defaultLayer],
+              activeLayerId: defaultLayer.id,
+            });
+
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.imageSmoothingEnabled = false;
+              ctx.drawImage(img, 0, 0);
+              const imageData = ctx.getImageData(0, 0, img.width, img.height);
+              for (let y = 0; y < img.height; y++) {
+                for (let x = 0; x < img.width; x++) {
+                  const idx = (y * img.width + x) * 4;
+                  const r = imageData.data[idx];
+                  const g = imageData.data[idx + 1];
+                  const b = imageData.data[idx + 2];
+                  const a = imageData.data[idx + 3];
+                  if (a > 0) {
+                    const color = `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(3)})`;
+                    useAppStore.getState().setPixel(spriteId, defaultLayer.id, x, y, color);
+                  }
+                }
+              }
+            }
+
+            const { addTab, setActiveTab } = useAppStore.getState();
+            const newTab: Tab = {
+              id: uuidv4(),
+              type: 'sprite',
+              title: `Imported ${img.width}x${img.height}`,
+              spriteId,
+              modified: false,
+            };
+            addTab(newTab);
+            setActiveTab(newTab.id);
+
+            await api.addRecentFile(filePath);
+            resolve();
+          } catch (e) {
+            reject(e);
+          }
+        };
+        img.onerror = reject;
+        img.src = dataUrl;
+      });
+      return;
+    }
+
+    alert('Unsupported file type');
+  } catch (error) {
+    console.error('Open path failed:', error);
+    alert('Failed to open file');
+  }
+}
+
 export async function handleSave(currentSpriteId?: string, currentTabId?: string) {
   if (!currentSpriteId || !currentTabId) return;
   

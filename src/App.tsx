@@ -1,10 +1,11 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAppStore } from './store/appStore';
 import TabBar from './components/TabBar';
 import TopMenu from './components/TopMenu';
 import HomeView from './components/HomeView';
 import SpriteEditor from './components/SpriteEditor';
 import './App.css';
+import { handleOpenPath } from './utils/menuActions';
 
 function App() {
   const { tabs, activeTabId } = useAppStore();
@@ -71,6 +72,16 @@ function App() {
   const handleSelectAll = () => {
     spriteEditorRef.current?.handleSelectAll();
   };
+
+  // Listen for OS-level open-file events from Electron main
+  useEffect(() => {
+    if (!window.electronAPI?.onOpenFile) return;
+    const unsubscribe = window.electronAPI.onOpenFile((filePath) => {
+      // Ensure UI is ready to accept a new tab
+      setTimeout(() => handleOpenPath(filePath), 0);
+    });
+    return () => { try { unsubscribe?.(); } catch {} };
+  }, []);
 
   return (
     <div className="app">

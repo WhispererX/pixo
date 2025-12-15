@@ -59,4 +59,19 @@ contextBridge.exposeInMainWorld('electronAPI', {
       throw error;
     }
   },
+  readFileBinary: async (filePath: string) => {
+    try {
+      return await ipcRenderer.invoke('read-file-binary', filePath);
+    } catch (error) {
+      console.error('Error in readFileBinary:', error);
+      throw error;
+    }
+  },
+  onOpenFile: (callback: (filePath: string) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, filePath: string) => {
+      try { callback(filePath); } catch (e) { console.error('onOpenFile handler error', e); }
+    };
+    ipcRenderer.on('open-file', handler);
+    return () => ipcRenderer.removeListener('open-file', handler);
+  },
 });

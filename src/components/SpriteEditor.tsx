@@ -87,10 +87,10 @@ function SpriteEditor({ spriteId }: SpriteEditorProps, ref: any) {
   };
 
   const pasteImageToLayer = (imageData: ImageData, imgWidth: number, imgHeight: number, resizeCanvas: boolean) => {
+    const targetWidth = resizeCanvas ? Math.max(sprite.width, imgWidth) : sprite.width;
+    const targetHeight = resizeCanvas ? Math.max(sprite.height, imgHeight) : sprite.height;
     if (resizeCanvas) {
-      const newWidth = Math.max(sprite.width, imgWidth);
-      const newHeight = Math.max(sprite.height, imgHeight);
-      handleResizeCanvas(newWidth, newHeight);
+      handleResizeCanvas(targetWidth, targetHeight);
     }
 
     const newLayerId = `layer-${Date.now()}`;
@@ -108,8 +108,8 @@ function SpriteEditor({ spriteId }: SpriteEditorProps, ref: any) {
     setActiveLayer(spriteId, newLayerId);
     
     const pastedSelection = new Set<string>();
-    for (let y = 0; y < Math.min(imgHeight, sprite.height); y++) {
-      for (let x = 0; x < Math.min(imgWidth, sprite.width); x++) {
+    for (let y = 0; y < Math.min(imgHeight, targetHeight); y++) {
+      for (let x = 0; x < Math.min(imgWidth, targetWidth); x++) {
         const idx = (y * imgWidth + x) * 4;
         const r = imageData.data[idx];
         const g = imageData.data[idx + 1];
@@ -128,8 +128,8 @@ function SpriteEditor({ spriteId }: SpriteEditorProps, ref: any) {
       setSelection(pastedSelection, {
         x: 0,
         y: 0,
-        width: Math.min(imgWidth, sprite.width),
-        height: Math.min(imgHeight, sprite.height),
+        width: Math.min(imgWidth, targetWidth),
+        height: Math.min(imgHeight, targetHeight),
       });
     }
   };
