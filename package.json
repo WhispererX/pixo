@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist-electron/main.js",
   "description": "A pixel art editor built with Electron",
-  "author": "Your Name",
+  "author": "Whisperer",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
